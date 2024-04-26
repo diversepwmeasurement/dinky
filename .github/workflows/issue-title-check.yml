@@ -1,28 +1,30 @@
-name: Issue Title Standard Check
-
-on:
-  issues:
-    types: [opened, edited]
-
 jobs:
   check-issue:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: actions-cool/issues-helper@v2.2.0
-        id: check
-        name: Check Issue Title
-        with:
-          actions: 'check-issue'
-          issue-number: ${{ github.event.issue.number }}
-          title-excludes: '[Bug],[Feature],[Doc],[Refactor],[Optimization],[Improvement]'
-
-      - if: steps.check.outputs.check-result == 'false' && github.event.issue.state == 'open'
-        uses: actions-cool/issues-helper@v2.2.0
-        name: Create Comment
-        with:
-          actions: 'create-comment'
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hi @${{ github.event.issue.user.login }}, It is detected that the current Issue title is not standardized. Please refer to [Issue Notes](http://www.dinky.org.cn/docs/next/developer_guide/contribution/issue) to modify it.
-            
-            你好 @${{ github.event.issue.user.login }}, 检测到当前 Issue 标题不规范, 请参考 [Issue 须知](http://www.dinky.org.cn/docs/next/developer_guide/contribution/issue) 进行修改
+    - continue-on-error: true
+      id: check
+      name: Check Issue Title
+      uses: actions-cool/issues-helper@v2.2.0
+      with:
+        actions: check-issue
+        issue-number: ${{ github.event.issue.number }}
+        title-excludes: '[Bug],[Feature],[Doc],[Refactor],[Optimization],[Improvement]'
+    - continue-on-error: true
+      if: steps.check.outputs.check-result == 'false' && github.event.issue.state
+        == 'open'
+      name: Create Comment
+      uses: actions-cool/issues-helper@v2.2.0
+      with:
+        actions: create-comment
+        body: "Hi @${{ github.event.issue.user.login }}, It is detected that the current\
+          \ Issue title is not standardized. Please refer to [Issue Notes](http://www.dinky.org.cn/docs/next/developer_guide/contribution/issue)\
+          \ to modify it.\n\n\u4F60\u597D @${{ github.event.issue.user.login }}, \u68C0\
+          \u6D4B\u5230\u5F53\u524D Issue \u6807\u9898\u4E0D\u89C4\u8303, \u8BF7\u53C2\
+          \u8003 [Issue \u987B\u77E5](http://www.dinky.org.cn/docs/next/developer_guide/contribution/issue)\
+          \ \u8FDB\u884C\u4FEE\u6539"
+        issue-number: ${{ github.event.issue.number }}
+name: Issue Title Standard Check
+on:
+  repository_dispatch:
+    types: trigger-ga___issue-title-check.yml

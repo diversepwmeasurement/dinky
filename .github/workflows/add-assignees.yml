@@ -1,105 +1,108 @@
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-name: Assign Problem To Developer
-
-on:
-  issues:
-    types: [ opened ]
-
 jobs:
-  assign-udf-problem-to-developer:
-    runs-on: ubuntu-latest
-    if: contains(github.event.issue.title, 'udf') == true || contains(github.event.issue.title, 'udtf') == true || contains(github.event.issue.body, 'udaf') == true
-    steps:
-      - name: assign problem to developer of udf
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'add-assignees'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          assignees: gaoyan1998,zackyoungh
-      - name: Assign developer Comment
-        uses: actions-cool/issues-helper@v1.7
-        with:
-          actions: 'create-comment'
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.event.issue.user.login }}, this issue is about UDF, so I assign it to @gaoyan1998 and @zackyoungh. If you have any questions, you can comment and reply.
-            
-            你好 @${{ github.event.issue.user.login }}, 这个 issue 是关于 UDF 的，所以我把它分配给了 @gaoyan1998 和 @zackyoungh。如有任何问题，可以评论回复。
-
-  assign-k8s-problem-to-developer:
-    runs-on: ubuntu-latest
-    if: contains(github.event.issue.title, 'k8s') == true || contains(github.event.issue.title, 'kubernetes') == true || contains(github.event.issue.body, 'kubernetes') == true
-    steps:
-      - name: assign problem to developer of k8s
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'add-assignees'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          assignees: gaoyan1998,zackyoungh
-      - name: Assign developer Comment
-        uses: actions-cool/issues-helper@v1.7
-        with:
-          actions: 'create-comment'
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.event.issue.user.login }}, this issue is about K8S, so I assign it to @gaoyan1998 and @zackyoungh. If you have any questions, you can comment and reply.
-            
-            你好 @${{ github.event.issue.user.login }}, 这个 issue 是关于 K8S 的，所以我把它分配给了 @gaoyan1998 和 @zackyoungh。如有任何问题，可以评论回复。
-
-  assign-web-problem-to-developer:
-    runs-on: ubuntu-latest
-    if: contains(github.event.issue.title, 'web') == true || contains(github.event.issue.body, 'web') == true
-    steps:
-      - name: assign problem to developer of web
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'add-assignees'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          assignees: Zzm0809
-      - name: Assign developer Comment
-        uses: actions-cool/issues-helper@v1.7
-        with:
-          actions: 'create-comment'
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.event.issue.user.login }}, this issue is about web, so I assign it to @Zzm0809. If you have any questions, you can comment and reply.
-            
-            你好 @${{ github.event.issue.user.login }}, 这个 issue 是关于 web 的，所以我把它分配给了 @Zzm0809。如有任何问题，可以评论回复。
-
   assign-cdc-problem-to-developer:
-    runs-on: ubuntu-latest
-    if: contains(github.event.issue.title, 'cdc') == true || contains(github.event.issue.title, 'cdcsource') == true || contains(github.event.issue.body, 'pipeline') == true
+    if: contains(github.event.issue.title, 'cdc') == true || contains(github.event.issue.title,
+      'cdcsource') == true || contains(github.event.issue.body, 'pipeline') == true
+    runs-on: self-hosted
     steps:
-      - name: assign problem to developer of cdc and cdcsource
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'add-assignees'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          assignees: aiwenmo
-      - name: Assign developer Comment
-        uses: actions-cool/issues-helper@v1.7
-        with:
-          actions: 'create-comment'
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.event.issue.user.login }}, this issue is about CDC/CDCSOURCE, so I assign it to @aiwenmo. If you have any questions, you can comment and reply.
-            
-            你好 @${{ github.event.issue.user.login }}, 这个 issue 是关于 CDC/CDCSOURCE 的，所以我把它分配给了 @aiwenmo。如有任何问题，可以评论回复。
+    - continue-on-error: true
+      name: assign problem to developer of cdc and cdcsource
+      uses: actions-cool/issues-helper@v3
+      with:
+        actions: add-assignees
+        assignees: aiwenmo
+        issue-number: ${{ github.event.issue.number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - continue-on-error: true
+      name: Assign developer Comment
+      uses: actions-cool/issues-helper@v1.7
+      with:
+        actions: create-comment
+        body: "Hello @${{ github.event.issue.user.login }}, this issue is about CDC/CDCSOURCE,\
+          \ so I assign it to @aiwenmo. If you have any questions, you can comment\
+          \ and reply.\n\n\u4F60\u597D @${{ github.event.issue.user.login }}, \u8FD9\
+          \u4E2A issue \u662F\u5173\u4E8E CDC/CDCSOURCE \u7684\uFF0C\u6240\u4EE5\u6211\
+          \u628A\u5B83\u5206\u914D\u7ED9\u4E86 @aiwenmo\u3002\u5982\u6709\u4EFB\u4F55\
+          \u95EE\u9898\uFF0C\u53EF\u4EE5\u8BC4\u8BBA\u56DE\u590D\u3002"
+        issue-number: ${{ github.event.issue.number }}
+  assign-k8s-problem-to-developer:
+    if: contains(github.event.issue.title, 'k8s') == true || contains(github.event.issue.title,
+      'kubernetes') == true || contains(github.event.issue.body, 'kubernetes') ==
+      true
+    runs-on: self-hosted
+    steps:
+    - continue-on-error: true
+      name: assign problem to developer of k8s
+      uses: actions-cool/issues-helper@v3
+      with:
+        actions: add-assignees
+        assignees: gaoyan1998,zackyoungh
+        issue-number: ${{ github.event.issue.number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - continue-on-error: true
+      name: Assign developer Comment
+      uses: actions-cool/issues-helper@v1.7
+      with:
+        actions: create-comment
+        body: "Hello @${{ github.event.issue.user.login }}, this issue is about K8S,\
+          \ so I assign it to @gaoyan1998 and @zackyoungh. If you have any questions,\
+          \ you can comment and reply.\n\n\u4F60\u597D @${{ github.event.issue.user.login\
+          \ }}, \u8FD9\u4E2A issue \u662F\u5173\u4E8E K8S \u7684\uFF0C\u6240\u4EE5\
+          \u6211\u628A\u5B83\u5206\u914D\u7ED9\u4E86 @gaoyan1998 \u548C @zackyoungh\u3002\
+          \u5982\u6709\u4EFB\u4F55\u95EE\u9898\uFF0C\u53EF\u4EE5\u8BC4\u8BBA\u56DE\
+          \u590D\u3002\n"
+        issue-number: ${{ github.event.issue.number }}
+  assign-udf-problem-to-developer:
+    if: contains(github.event.issue.title, 'udf') == true || contains(github.event.issue.title,
+      'udtf') == true || contains(github.event.issue.body, 'udaf') == true
+    runs-on: self-hosted
+    steps:
+    - continue-on-error: true
+      name: assign problem to developer of udf
+      uses: actions-cool/issues-helper@v3
+      with:
+        actions: add-assignees
+        assignees: gaoyan1998,zackyoungh
+        issue-number: ${{ github.event.issue.number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - continue-on-error: true
+      name: Assign developer Comment
+      uses: actions-cool/issues-helper@v1.7
+      with:
+        actions: create-comment
+        body: "Hello @${{ github.event.issue.user.login }}, this issue is about UDF,\
+          \ so I assign it to @gaoyan1998 and @zackyoungh. If you have any questions,\
+          \ you can comment and reply.\n\n\u4F60\u597D @${{ github.event.issue.user.login\
+          \ }}, \u8FD9\u4E2A issue \u662F\u5173\u4E8E UDF \u7684\uFF0C\u6240\u4EE5\
+          \u6211\u628A\u5B83\u5206\u914D\u7ED9\u4E86 @gaoyan1998 \u548C @zackyoungh\u3002\
+          \u5982\u6709\u4EFB\u4F55\u95EE\u9898\uFF0C\u53EF\u4EE5\u8BC4\u8BBA\u56DE\
+          \u590D\u3002\n"
+        issue-number: ${{ github.event.issue.number }}
+  assign-web-problem-to-developer:
+    if: contains(github.event.issue.title, 'web') == true || contains(github.event.issue.body,
+      'web') == true
+    runs-on: self-hosted
+    steps:
+    - continue-on-error: true
+      name: assign problem to developer of web
+      uses: actions-cool/issues-helper@v3
+      with:
+        actions: add-assignees
+        assignees: Zzm0809
+        issue-number: ${{ github.event.issue.number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - continue-on-error: true
+      name: Assign developer Comment
+      uses: actions-cool/issues-helper@v1.7
+      with:
+        actions: create-comment
+        body: "Hello @${{ github.event.issue.user.login }}, this issue is about web,\
+          \ so I assign it to @Zzm0809. If you have any questions, you can comment\
+          \ and reply.\n\n\u4F60\u597D @${{ github.event.issue.user.login }}, \u8FD9\
+          \u4E2A issue \u662F\u5173\u4E8E web \u7684\uFF0C\u6240\u4EE5\u6211\u628A\
+          \u5B83\u5206\u914D\u7ED9\u4E86 @Zzm0809\u3002\u5982\u6709\u4EFB\u4F55\u95EE\
+          \u9898\uFF0C\u53EF\u4EE5\u8BC4\u8BBA\u56DE\u590D\u3002\n"
+        issue-number: ${{ github.event.issue.number }}
+name: Assign Problem To Developer
+on:
+  repository_dispatch:
+    types: trigger-ga___add-assignees.yml
